@@ -13,3 +13,10 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Documento interno de coordinacion del equipo (no se versiona)
+docs/DIVISION_TRABAJO.md
+
+# Notificador FCM (tools/notifier): clave de cuenta de servicio y dependencias de Node
+tools/notifier/serviceAccountKey.json
+node_modules/

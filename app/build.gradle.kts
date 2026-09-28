@@ -29,6 +29,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        viewBinding = true
+    }
+}
+
+// El plugin se activa solo cuando existe app/google-services.json (se descarga de la consola de Firebase).
+// Asi el proyecto compila antes de crear el proyecto Firebase.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
 }
 
 dependencies {
@@ -36,6 +45,17 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.constraintlayout)
     implementation(libs.material)
+    implementation(libs.recyclerview)
+    implementation(libs.lifecycle.viewmodel)
+    implementation(libs.lifecycle.livedata)
+    implementation(libs.glide)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.messaging)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)

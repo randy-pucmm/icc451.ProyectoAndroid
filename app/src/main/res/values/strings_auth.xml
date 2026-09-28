@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Textos de Auth y Usuarios (Integrante A). Un archivo por funcionalidad evita conflictos de merge en strings.xml. -->
+<resources>
+    <string name="login_title">Iniciar sesión</string>
+    <string name="register_title">Crear cuenta</string>
+    <string name="users_title">Usuarios</string>
+</resources>

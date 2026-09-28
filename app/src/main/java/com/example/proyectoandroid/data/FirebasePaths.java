@@ -1,0 +1,20 @@
+package com.example.proyectoandroid.data;
+
+/**
+ * Nombres de colecciones y rutas compartidas entre Repositories.
+ * users/{uid}
+ * chats/{chatId}
+ * chats/{chatId}/messages/{messageId}
+ */
+public final class FirebasePaths {
+
+    public static final String USERS = "users";
+    public static final String CHATS = "chats";
+    public static final String MESSAGES = "messages";
+
+    /** Carpeta de Storage para imagenes enviadas: chat_images/{chatId}/{uuid}.jpg */
+    public static final String STORAGE_CHAT_IMAGES = "chat_images";
+
+    private FirebasePaths() {
+    }
+}
