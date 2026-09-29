@@ -1,5 +1,6 @@
 package com.example.proyectoandroid.data.model;
 
+import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
@@ -10,6 +11,8 @@ public class Message {
     public static final String TYPE_TEXT = "TEXT";
     public static final String TYPE_IMAGE = "IMAGE";
 
+    @DocumentId
+    private String id;
     private String senderId;
     private String senderName;
     private String text;
@@ -20,6 +23,14 @@ public class Message {
 
     // Firestore necesita un constructor publico sin argumentos.
     public Message() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getSenderId() {
