@@ -4,4 +4,59 @@
     <string name="login_title">Iniciar sesión</string>
     <string name="register_title">Crear cuenta</string>
     <string name="users_title">Usuarios</string>
+
+    <!-- Usuarios -->
+    <string name="users_error_no_session">Tu sesión ya no está activa</string>
+    <string name="users_error_load">No se pudieron cargar los usuarios</string>
+    <string name="users_empty">Todavía no hay otros usuarios registrados</string>
+    <string name="users_menu_logout">Cerrar sesión</string>
+    <string name="users_menu_search">Buscar</string>
+    <string name="users_search_hint">Buscar por nombre o correo</string>
+    <string name="profile_change_photo">Toca para cambiar tu foto de perfil</string>
+    <string name="error_photo_save">No se pudo guardar la foto de perfil</string>
+    <string name="user_status_online">En línea</string>
+    <string name="users_no_results">Ningún usuario coincide con la búsqueda</string>
+
+    <!-- Login -->
+    <string name="login_subtitle">Bienvenido de nuevo</string>
+    <string name="login_button">Entrar</string>
+    <string name="login_go_register">¿No tienes cuenta? Crear cuenta</string>
+    <string name="hint_email">Correo electrónico</string>
+    <string name="hint_password">Contraseña</string>
+
+    <!-- Notificaciones -->
+    <string name="notification_channel_name">Mensajes</string>
+    <string name="notification_channel_description">Avisos de mensajes nuevos</string>
+    <string name="notification_default_title">Nuevo mensaje</string>
+
+    <!-- Imagenes -->
+    <string name="error_image_no_session">Inicia sesión para enviar imágenes</string>
+    <string name="error_image_read">No se pudo leer la imagen seleccionada</string>
+    <string name="error_image_upload">No se pudo subir la imagen. Revisa tu conexión e inténtalo de nuevo</string>
+
+    <!-- Registro -->
+    <string name="register_subtitle">Crea tu cuenta para empezar a chatear</string>
+    <string name="register_button">Registrarme</string>
+    <string name="register_go_login">¿Ya tienes cuenta? Iniciar sesión</string>
+    <string name="hint_name">Nombre</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+
+    <!-- Validaciones de formularios -->
+    <string name="error_name_required">Ingresa tu nombre</string>
+    <string name="error_name_short">El nombre debe tener al menos 2 caracteres</string>
+    <string name="error_email_required">Ingresa tu correo electrónico</string>
+    <string name="error_email_invalid">El correo electrónico no es válido</string>
+    <string name="error_password_required">Ingresa tu contraseña</string>
+    <string name="error_password_short">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_confirm_required">Confirma tu contraseña</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+
+    <!-- Errores de Firebase Authentication -->
+    <string name="error_auth_invalid_credentials">Correo o contraseña incorrectos</string>
+    <string name="error_auth_email_in_use">Ya existe una cuenta con ese correo electrónico</string>
+    <string name="error_auth_weak_password">La contraseña es demasiado débil. Usa al menos 6 caracteres</string>
+    <string name="error_auth_user_disabled">Esta cuenta ha sido deshabilitada</string>
+    <string name="error_auth_too_many_requests">Demasiados intentos. Espera unos minutos e inténtalo de nuevo</string>
+    <string name="error_auth_network">Sin conexión. Revisa tu internet e inténtalo de nuevo</string>
+    <string name="error_auth_unknown">Ocurrió un error inesperado. Inténtalo de nuevo</string>
 </resources>
