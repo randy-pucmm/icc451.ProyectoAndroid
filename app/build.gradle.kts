@@ -9,7 +9,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.proyectoandroid"
+        applicationId = "com.pucmm.proyectochat"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
@@ -31,6 +31,10 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+    testOptions {
+        // Las clases de Firebase llaman a android.text.TextUtils; en tests de JVM debe devolver valores por defecto.
+        unitTests.isReturnDefaultValues = true
     }
 }
 
