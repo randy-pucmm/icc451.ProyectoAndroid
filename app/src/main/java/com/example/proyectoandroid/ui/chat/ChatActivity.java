@@ -10,10 +10,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.proyectoandroid.R;
+import com.example.proyectoandroid.data.model.Message;
 import com.example.proyectoandroid.databinding.ActivityChatBinding;
 import com.example.proyectoandroid.util.Resource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -70,7 +73,12 @@ public class ChatActivity extends AppCompatActivity {
         viewModel.getMessages().observe(this, resource -> {
             if (resource.getStatus() == Resource.Status.SUCCESS
                     && resource.getData() != null) {
-                adapter.submitList(resource.getData());
+                List<Message> list = resource.getData();
+                adapter.submitList(list, () -> {
+                    if (!list.isEmpty()) {
+                        binding.rvMessages.scrollToPosition(list.size() - 1);
+                    }
+                });
             }
         });
     }
