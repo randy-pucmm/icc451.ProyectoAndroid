@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.proyectoandroid.R;
 import com.example.proyectoandroid.databinding.ActivityChatBinding;
+import com.example.proyectoandroid.util.Resource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -53,6 +54,8 @@ public class ChatActivity extends AppCompatActivity {
         binding.toolbar.setTitle(otherName != null ? otherName : getString(R.string.chat_title));
         setupList(user.getUid());
         observeMessages();
+        observeSendState();
+        binding.btnSend.setOnClickListener(v -> sendMessage());
     }
 
     private void setupList(String currentUid) {
@@ -65,9 +68,25 @@ public class ChatActivity extends AppCompatActivity {
 
     private void observeMessages() {
         viewModel.getMessages().observe(this, resource -> {
-            if (resource.getStatus() == com.example.proyectoandroid.util.Resource.Status.SUCCESS
+            if (resource.getStatus() == Resource.Status.SUCCESS
                     && resource.getData() != null) {
                 adapter.submitList(resource.getData());
+            }
+        });
+    }
+
+    private void sendMessage() {
+        String text = binding.etMessage.getText().toString();
+        // El ViewModel ignora los mensajes vacios; solo limpiamos el campo si se envio algo.
+        if (viewModel.sendTextMessage(text)) {
+            binding.etMessage.setText("");
+        }
+    }
+
+    private void observeSendState() {
+        viewModel.getSendState().observe(this, resource -> {
+            if (resource.getStatus() == Resource.Status.ERROR) {
+                Toast.makeText(this, R.string.chat_error_send, Toast.LENGTH_SHORT).show();
             }
         });
     }
