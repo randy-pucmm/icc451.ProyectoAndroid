@@ -3,6 +3,7 @@ package com.example.proyectoandroid.ui.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,9 +72,16 @@ public class ChatActivity extends AppCompatActivity {
 
     private void observeMessages() {
         viewModel.getMessages().observe(this, resource -> {
-            if (resource.getStatus() == Resource.Status.SUCCESS
-                    && resource.getData() != null) {
+            boolean loading = resource.getStatus() == Resource.Status.LOADING;
+            binding.progress.setVisibility(loading ? View.VISIBLE : View.GONE);
+
+            if (resource.getStatus() == Resource.Status.ERROR) {
+                Toast.makeText(this, R.string.chat_error_load, Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (resource.getStatus() == Resource.Status.SUCCESS && resource.getData() != null) {
                 List<Message> list = resource.getData();
+                binding.tvEmpty.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
                 adapter.submitList(list, () -> {
                     if (!list.isEmpty()) {
                         binding.rvMessages.scrollToPosition(list.size() - 1);
