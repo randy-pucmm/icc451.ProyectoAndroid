@@ -1,24 +1,24 @@
 package com.example.proyectoandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.proyectoandroid.ui.auth.AuthViewModel;
+import com.example.proyectoandroid.ui.auth.LoginActivity;
+import com.example.proyectoandroid.ui.users.UsersActivity;
+
+/** Punto de entrada sin interfaz: decide si se abre la lista de usuarios (sesion activa) o el login. */
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        AuthViewModel viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        Class<?> destination = viewModel.isLoggedIn() ? UsersActivity.class : LoginActivity.class;
+        startActivity(new Intent(this, destination));
+        finish();
     }
 }
