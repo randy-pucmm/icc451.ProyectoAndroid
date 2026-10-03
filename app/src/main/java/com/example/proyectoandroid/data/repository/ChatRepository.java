@@ -24,6 +24,8 @@ import java.util.Map;
 /** Acceso a chats/{chatId} y chats/{chatId}/messages en Firestore. */
 public class ChatRepository {
 
+    static final String LAST_MESSAGE_IMAGE = "Imagen";
+
     private final FirebaseFirestore db;
 
     public ChatRepository() {
@@ -43,7 +45,7 @@ public class ChatRepository {
 
         Map<String, Object> chat = new HashMap<>();
         chat.put("participants", participants);
-        chat.put("lastMessage", message.getText());
+        chat.put("lastMessage", lastMessageOf(message));
         chat.put("lastMessageAt", FieldValue.serverTimestamp());
 
         WriteBatch batch = db.batch();
@@ -60,6 +62,10 @@ public class ChatRepository {
                 .collection(FirebasePaths.MESSAGES)
                 .orderBy("timestamp", Query.Direction.ASCENDING);
         return new MessagesLiveData(query);
+    }
+
+    private static String lastMessageOf(Message message) {
+        return Message.TYPE_IMAGE.equals(message.getType()) ? LAST_MESSAGE_IMAGE : message.getText();
     }
 
     @NonNull
