@@ -8,18 +8,26 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.proyectoandroid.data.model.Message;
+import com.example.proyectoandroid.databinding.ItemImageOtherBinding;
+import com.example.proyectoandroid.databinding.ItemImageOwnBinding;
 import com.example.proyectoandroid.databinding.ItemMessageOtherBinding;
 import com.example.proyectoandroid.databinding.ItemMessageOwnBinding;
 import com.example.proyectoandroid.util.DateFormatter;
 
 import java.util.Objects;
 
-/** Historial del chat: burbuja a la derecha para mensajes propios y a la izquierda para ajenos. */
+/**
+ * Historial del chat: burbuja a la derecha para mensajes propios y a la izquierda para ajenos.
+ * Cuatro view types: texto/imagen x propio/ajeno.
+ */
 public class MessageAdapter extends ListAdapter<Message, RecyclerView.ViewHolder> {
 
-    private static final int VIEW_OWN = 0;
-    private static final int VIEW_OTHER = 1;
+    private static final int VIEW_OWN_TEXT = 0;
+    private static final int VIEW_OTHER_TEXT = 1;
+    private static final int VIEW_OWN_IMAGE = 2;
+    private static final int VIEW_OTHER_IMAGE = 3;
 
     private final String currentUid;
 
@@ -30,37 +38,49 @@ public class MessageAdapter extends ListAdapter<Message, RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return isOwn(getItem(position)) ? VIEW_OWN : VIEW_OTHER;
-    }
-
-    private boolean isOwn(Message message) {
-        return currentUid != null && currentUid.equals(message.getSenderId());
+        Message message = getItem(position);
+        boolean own = currentUid != null && currentUid.equals(message.getSenderId());
+        boolean image = Message.TYPE_IMAGE.equals(message.getType());
+        if (image) {
+            return own ? VIEW_OWN_IMAGE : VIEW_OTHER_IMAGE;
+        }
+        return own ? VIEW_OWN_TEXT : VIEW_OTHER_TEXT;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == VIEW_OWN) {
-            return new OwnHolder(ItemMessageOwnBinding.inflate(inflater, parent, false));
+        switch (viewType) {
+            case VIEW_OWN_TEXT:
+                return new OwnTextHolder(ItemMessageOwnBinding.inflate(inflater, parent, false));
+            case VIEW_OWN_IMAGE:
+                return new OwnImageHolder(ItemImageOwnBinding.inflate(inflater, parent, false));
+            case VIEW_OTHER_IMAGE:
+                return new OtherImageHolder(ItemImageOtherBinding.inflate(inflater, parent, false));
+            default:
+                return new OtherTextHolder(ItemMessageOtherBinding.inflate(inflater, parent, false));
         }
-        return new OtherHolder(ItemMessageOtherBinding.inflate(inflater, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message message = getItem(position);
-        if (holder instanceof OwnHolder) {
-            ((OwnHolder) holder).bind(message);
+        if (holder instanceof OwnTextHolder) {
+            ((OwnTextHolder) holder).bind(message);
+        } else if (holder instanceof OtherTextHolder) {
+            ((OtherTextHolder) holder).bind(message);
+        } else if (holder instanceof OwnImageHolder) {
+            ((OwnImageHolder) holder).bind(message);
         } else {
-            ((OtherHolder) holder).bind(message);
+            ((OtherImageHolder) holder).bind(message);
         }
     }
 
-    static class OwnHolder extends RecyclerView.ViewHolder {
+    static class OwnTextHolder extends RecyclerView.ViewHolder {
         private final ItemMessageOwnBinding binding;
 
-        OwnHolder(ItemMessageOwnBinding binding) {
+        OwnTextHolder(ItemMessageOwnBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -72,10 +92,10 @@ public class MessageAdapter extends ListAdapter<Message, RecyclerView.ViewHolder
         }
     }
 
-    static class OtherHolder extends RecyclerView.ViewHolder {
+    static class OtherTextHolder extends RecyclerView.ViewHolder {
         private final ItemMessageOtherBinding binding;
 
-        OtherHolder(ItemMessageOtherBinding binding) {
+        OtherTextHolder(ItemMessageOtherBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -84,6 +104,36 @@ public class MessageAdapter extends ListAdapter<Message, RecyclerView.ViewHolder
             binding.tvSender.setText(message.getSenderName());
             binding.tvText.setText(message.getText());
             binding.tvTime.setText(DateFormatter.format(message.getTimestamp()));
+        }
+    }
+
+    static class OwnImageHolder extends RecyclerView.ViewHolder {
+        private final ItemImageOwnBinding binding;
+
+        OwnImageHolder(ItemImageOwnBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        void bind(Message message) {
+            binding.tvSender.setText(message.getSenderName());
+            binding.tvTime.setText(DateFormatter.format(message.getTimestamp()));
+            Glide.with(binding.ivImage).load(message.getImageUrl()).centerCrop().into(binding.ivImage);
+        }
+    }
+
+    static class OtherImageHolder extends RecyclerView.ViewHolder {
+        private final ItemImageOtherBinding binding;
+
+        OtherImageHolder(ItemImageOtherBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        void bind(Message message) {
+            binding.tvSender.setText(message.getSenderName());
+            binding.tvTime.setText(DateFormatter.format(message.getTimestamp()));
+            Glide.with(binding.ivImage).load(message.getImageUrl()).centerCrop().into(binding.ivImage);
         }
     }
 
@@ -95,7 +145,9 @@ public class MessageAdapter extends ListAdapter<Message, RecyclerView.ViewHolder
 
         @Override
         public boolean areContentsTheSame(@NonNull Message oldItem, @NonNull Message newItem) {
-            return Objects.equals(oldItem.getText(), newItem.getText())
+            return Objects.equals(oldItem.getType(), newItem.getType())
+                    && Objects.equals(oldItem.getText(), newItem.getText())
+                    && Objects.equals(oldItem.getImageUrl(), newItem.getImageUrl())
                     && Objects.equals(oldItem.getSenderName(), newItem.getSenderName())
                     && Objects.equals(oldItem.getTimestamp(), newItem.getTimestamp());
         }
