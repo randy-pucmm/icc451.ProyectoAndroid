@@ -66,6 +66,21 @@ public class ChatViewModel extends ViewModel {
         return true;
     }
 
+    /**
+     * Mensaje de imagen: la URL la entrega ImageRepository.upload (ya subida a su destino).
+     *
+     * @return false si la URL esta vacia y no se envio nada.
+     */
+    public boolean sendImageMessage(String imageUrl) {
+        if (normalize(imageUrl) == null) {
+            return false;
+        }
+        Message message = buildMessage(Message.TYPE_IMAGE);
+        message.setImageUrl(imageUrl.trim());
+        send(message);
+        return true;
+    }
+
     private Message buildMessage(String type) {
         Message message = new Message();
         message.setSenderId(currentUid);
