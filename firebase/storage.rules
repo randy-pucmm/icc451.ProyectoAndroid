@@ -1,0 +1,25 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Imagenes enviadas por chat: chat_images/{uid del remitente}/{archivo}.jpg
+    // Las puede ver cualquier usuario autenticado (la URL ya incluye un token);
+    // solo el remitente sube en su carpeta, solo imagenes y de hasta 5 MB.
+    match /chat_images/{uid}/{file} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Fotos de perfil: profile_photos/{uid}/avatar.jpg
+    match /profile_photos/{uid}/{file} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.size < 2 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
