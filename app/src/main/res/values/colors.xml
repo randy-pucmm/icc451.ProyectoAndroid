@@ -3,11 +3,19 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- Paleta: verde oscuro, turquesa, blanco y celeste -->
+    <color name="green_dark">#FF0A5C45</color>
+    <color name="teal">#FF069494</color>
+    <color name="cyan_light">#FF99F6FA</color>
+
     <!-- Chat -->
-    <color name="chat_bubble_own">#FF1E88E5</color>
-    <color name="chat_bubble_other">#FFE8EAED</color>
+    <color name="chat_bubble_own">@color/green_dark</color>
+    <color name="chat_bubble_other">@color/cyan_light</color>
     <color name="chat_text_own">#FFFFFFFF</color>
-    <color name="chat_text_other">#FF202124</color>
+    <color name="chat_text_other">#FF0B2A2A</color>
     <color name="chat_meta_own">#CCFFFFFF</color>
-    <color name="chat_meta_other">#FF5F6368</color>
+    <color name="chat_meta_other">#FF0A5C45</color>
+    <color name="chat_input_bar">#FFFFFFFF</color>
+    <color name="chat_input_text">#FF202124</color>
+    <color name="chat_input_hint">#FF6B7878</color>
 </resources>
