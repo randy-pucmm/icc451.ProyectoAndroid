@@ -20,3 +20,7 @@ docs/DIVISION_TRABAJO.md
 # Notificador FCM (tools/notifier): clave de cuenta de servicio y dependencias de Node
 tools/notifier/serviceAccountKey.json
 node_modules/
+
+# Claves de cuenta de servicio de Firebase (por si se descargan en otra carpeta): nunca se versionan
+serviceAccountKey.json
+*-firebase-adminsdk-*.json
