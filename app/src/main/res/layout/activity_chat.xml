@@ -26,10 +26,10 @@
         android:importantForAccessibility="no"
         android:scaleType="centerCrop"
         android:src="@drawable/bg_chat_wallpaper"
-        app:layout_constraintBottom_toBottomOf="@id/rvMessages"
-        app:layout_constraintEnd_toEndOf="@id/rvMessages"
-        app:layout_constraintStart_toStartOf="@id/rvMessages"
-        app:layout_constraintTop_toTopOf="@id/rvMessages" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMessages"
@@ -70,10 +70,12 @@
         android:id="@+id/inputBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/chat_input_bar"
-        android:gravity="center_vertical"
+        android:gravity="bottom"
         android:orientation="horizontal"
-        android:padding="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -84,21 +86,28 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:autofillHints="@null"
+            android:background="@drawable/bg_input_pill"
             android:hint="@string/chat_hint_message"
-            android:textColor="@color/chat_input_text"
-            android:textColorHint="@color/chat_input_hint"
             android:importantForAutofill="no"
             android:inputType="textCapSentences|textMultiLine"
-            android:maxLines="4" />
+            android:maxLines="5"
+            android:minHeight="48dp"
+            android:paddingStart="18dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/chat_input_text"
+            android:textColorHint="@color/chat_input_hint"
+            android:textSize="16sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnSend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:backgroundTint="@color/teal"
-            android:text="@string/chat_send"
-            android:textColor="@color/white" />
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_send_button"
+            android:contentDescription="@string/chat_send"
+            android:src="@drawable/ic_send" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

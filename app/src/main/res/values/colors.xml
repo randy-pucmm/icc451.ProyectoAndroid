@@ -15,7 +15,7 @@
     <color name="chat_text_other">#FF0B2A2A</color>
     <color name="chat_meta_own">#FF0A5C45</color>
     <color name="chat_meta_other">#FF0A5C45</color>
-    <color name="chat_input_bar">#FFFFFFFF</color>
-    <color name="chat_input_text">#FF202124</color>
-    <color name="chat_input_hint">#FF6B7878</color>
+    <color name="chat_input_bar">#FF1F2927</color>
+    <color name="chat_input_text">#FFFFFFFF</color>
+    <color name="chat_input_hint">#FF8FA3A0</color>
 </resources>
