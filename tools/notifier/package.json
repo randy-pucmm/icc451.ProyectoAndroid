@@ -1,0 +1,16 @@
+{
+  "name": "chat-notifier",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Envia notificaciones push FCM cuando se escribe un mensaje nuevo en Firestore (reemplaza a Cloud Functions, que exigen el plan Blaze).",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.5.0"
+  }
+}
