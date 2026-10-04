@@ -77,6 +77,13 @@ public class MessageAdapter extends ListAdapter<Message, RecyclerView.ViewHolder
         }
     }
 
+    static String initialOf(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return "?";
+        }
+        return name.trim().substring(0, 1).toUpperCase();
+    }
+
     static class OwnTextHolder extends RecyclerView.ViewHolder {
         private final ItemMessageOwnBinding binding;
 
@@ -102,6 +109,7 @@ public class MessageAdapter extends ListAdapter<Message, RecyclerView.ViewHolder
 
         void bind(Message message) {
             binding.tvSender.setText(message.getSenderName());
+            binding.tvAvatar.setText(initialOf(message.getSenderName()));
             binding.tvText.setText(message.getText());
             binding.tvTime.setText(DateFormatter.format(message.getTimestamp()));
         }
@@ -132,6 +140,7 @@ public class MessageAdapter extends ListAdapter<Message, RecyclerView.ViewHolder
 
         void bind(Message message) {
             binding.tvSender.setText(message.getSenderName());
+            binding.tvAvatar.setText(initialOf(message.getSenderName()));
             binding.tvTime.setText(DateFormatter.format(message.getTimestamp()));
             Glide.with(binding.ivImage).load(message.getImageUrl()).centerCrop().into(binding.ivImage);
         }
