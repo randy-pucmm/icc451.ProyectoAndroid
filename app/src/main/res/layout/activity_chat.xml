@@ -11,12 +11,25 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/green_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/chat_title"
         app:titleTextColor="@color/white" />
+
+    <ImageView
+        android:id="@+id/ivWallpaper"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_chat_wallpaper"
+        app:layout_constraintBottom_toBottomOf="@id/rvMessages"
+        app:layout_constraintEnd_toEndOf="@id/rvMessages"
+        app:layout_constraintStart_toStartOf="@id/rvMessages"
+        app:layout_constraintTop_toTopOf="@id/rvMessages" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMessages"
@@ -57,6 +70,7 @@
         android:id="@+id/inputBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/chat_input_bar"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="8dp"
@@ -71,6 +85,8 @@
             android:layout_weight="1"
             android:autofillHints="@null"
             android:hint="@string/chat_hint_message"
+            android:textColor="@color/chat_input_text"
+            android:textColorHint="@color/chat_input_hint"
             android:importantForAutofill="no"
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines="4" />
@@ -80,7 +96,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/chat_send" />
+            android:backgroundTint="@color/teal"
+            android:text="@string/chat_send"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
