@@ -1,21 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Paleta "WhatsApp" (modo claro). El modo oscuro redefine los mismos nombres en values-night/colors.xml,
+    asi que layouts y drawables solo usan estos nombres semanticos y nunca un color fijo.
+-->
 <resources>
-    <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Paleta: verde oscuro, turquesa, blanco y celeste -->
-    <color name="green_dark">#FF0A5C45</color>
-    <color name="teal">#FF069494</color>
-    <color name="cyan_light">#FF99F6FA</color>
+    <!-- Roles del tema Material -->
+    <color name="primary">#FF008069</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="primary_container">#FFD9FDD3</color>
+    <color name="on_primary_container">#FF0B3D2E</color>
+    <color name="secondary">#FF00A884</color>
+    <color name="on_secondary">#FFFFFFFF</color>
+    <color name="surface">#FFFFFFFF</color>
+    <color name="on_surface">#FF111B21</color>
+    <color name="on_surface_variant">#FF667781</color>
+    <color name="outline_variant">#FFE9EDEF</color>
+
+    <!-- Barra superior (Usuarios y Chat) -->
+    <color name="toolbar_background">#FF008069</color>
+    <color name="toolbar_content">#FFFFFFFF</color>
+
+    <!-- Avatares y estado de conexion -->
+    <color name="avatar_background">#FF008069</color>
+    <color name="online">#FF25D366</color>
 
     <!-- Chat -->
-    <color name="chat_bubble_own">@color/cyan_light</color>
-    <color name="chat_bubble_other">@color/white</color>
-    <color name="chat_text_own">#FF0B2A2A</color>
-    <color name="chat_text_other">#FF0B2A2A</color>
-    <color name="chat_meta_own">#FF0A5C45</color>
-    <color name="chat_meta_other">#FF0A5C45</color>
-    <color name="chat_input_bar">#FF1F2927</color>
-    <color name="chat_input_text">#FFFFFFFF</color>
-    <color name="chat_input_hint">#FF8FA3A0</color>
+    <color name="chat_background">#FFEFEAE2</color>
+    <color name="chat_bubble_own">#FFD9FDD3</color>
+    <color name="chat_bubble_other">#FFFFFFFF</color>
+    <color name="chat_text">#FF111B21</color>
+    <color name="chat_meta_own">#FF667781</color>
+    <color name="chat_meta_other">#FF667781</color>
+    <color name="chat_input_bar">#FFFFFFFF</color>
+    <color name="chat_input_text">#FF111B21</color>
+    <color name="chat_input_hint">#FF667781</color>
+    <color name="chat_send_button">#FF00A884</color>
 </resources>

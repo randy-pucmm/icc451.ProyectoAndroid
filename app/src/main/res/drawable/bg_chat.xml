@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo del chat en modo claro: beige liso. En modo oscuro se usa el wallpaper (drawable-night/bg_chat.xml). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/chat_background" />
+</shape>

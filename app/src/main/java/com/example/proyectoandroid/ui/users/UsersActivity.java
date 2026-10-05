@@ -10,7 +10,6 @@ import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,10 +60,11 @@ public class UsersActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        WindowInsetsHelper.enableEdgeToEdgeWithAppBar(this);
         binding = ActivityUsersBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        WindowInsetsHelper.applySystemBarPadding(binding.root);
+        WindowInsetsHelper.applyContentPadding(binding.root);
+        WindowInsetsHelper.applyStatusBarPadding(binding.appBar);
 
         viewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         if (!viewModel.isLoggedIn()) {

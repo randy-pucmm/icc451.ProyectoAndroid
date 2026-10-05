@@ -14,6 +14,7 @@ import com.example.proyectoandroid.R;
 import com.example.proyectoandroid.data.model.Message;
 import com.example.proyectoandroid.databinding.ActivityChatBinding;
 import com.example.proyectoandroid.util.Resource;
+import com.example.proyectoandroid.util.WindowInsetsHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -39,8 +40,12 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowInsetsHelper.enableEdgeToEdgeWithAppBar(this);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        WindowInsetsHelper.applyContentPadding(binding.root);
+        WindowInsetsHelper.applyStatusBarPadding(binding.appBar);
+        binding.toolbar.setNavigationOnClickListener(v -> finish());
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String otherUid = getIntent().getStringExtra(EXTRA_OTHER_UID);

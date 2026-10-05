@@ -2,34 +2,42 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".ui.chat.ChatActivity">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- La barra se extiende bajo la barra de estado: el contenedor recibe ese margen como padding. -->
+    <LinearLayout
+        android:id="@+id/appBar"
         android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/green_dark"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar_background"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/chat_title"
-        app:titleTextColor="@color/white" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.App.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/chat_title" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/ivWallpaper"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:contentDescription="@null"
         android:importantForAccessibility="no"
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_chat_wallpaper"
+        android:src="@drawable/bg_chat"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/appBar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMessages"
@@ -41,12 +49,13 @@
         app:layout_constraintBottom_toTopOf="@id/inputBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/appBar" />
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminate="true"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/rvMessages"
         app:layout_constraintEnd_toEndOf="@id/rvMessages"
@@ -60,6 +69,7 @@
         android:gravity="center"
         android:padding="24dp"
         android:text="@string/chat_empty"
+        android:textColor="@color/chat_meta_other"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/rvMessages"
         app:layout_constraintEnd_toEndOf="@id/rvMessages"

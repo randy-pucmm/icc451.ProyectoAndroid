@@ -8,11 +8,21 @@
     android:orientation="vertical"
     tools:context=".ui.users.UsersActivity">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- La barra se extiende bajo la barra de estado: el contenedor recibe ese margen como padding. -->
+    <LinearLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:title="@string/users_title" />
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar_background"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.App.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/users_title" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/headerProfile"
