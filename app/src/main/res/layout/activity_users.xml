@@ -36,7 +36,7 @@
                 android:background="@drawable/bg_avatar"
                 android:gravity="center"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:textColor="?attr/colorOnPrimaryContainer"
+                android:textColor="@color/white"
                 tools:text="R" />
 
             <ImageView
