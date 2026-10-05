@@ -1,16 +1,5 @@
 'use strict';
 
-/**
- * Notificador FCM para la demo.
- *
- * Escucha todos los documentos chats/{chatId}/messages/{id} nuevos y envia un push al otro
- * participante (el que tenga su token en users/{uid}.fcmToken). Se ejecuta en una laptop;
- * usa el Admin SDK, asi que no pasa por las reglas de seguridad de Firestore.
- *
- * Formato del mensaje (contrato con fcm/ChatMessagingService.java): solo "data", con
- *   senderId, senderName, body
- */
-
 const path = require('path');
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');

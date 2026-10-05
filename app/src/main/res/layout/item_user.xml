@@ -60,7 +60,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?attr/textAppearanceTitleMedium"
-            tools:text="Ana Pérez" />
+            tools:text="Freddy Peña" />
 
         <TextView
             android:id="@+id/textSubtitle"
@@ -70,7 +70,7 @@
             android:maxLines="1"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant"
-            tools:text="ana@correo.com" />
+            tools:text="freddy@pucmm.com" />
     </LinearLayout>
 
     <TextView
