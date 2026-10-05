@@ -40,6 +40,11 @@ public final class NotificationHelper {
         context.getSystemService(NotificationManager.class).createNotificationChannel(channel);
     }
 
+    /** Quita la notificacion de {@code senderId} (al abrir su chat ya no hace falta). */
+    public static void cancel(@NonNull Context context, @NonNull String senderId) {
+        NotificationManagerCompat.from(context).cancel(senderId.hashCode());
+    }
+
     /**
      * Muestra la notificacion de un mensaje. Al tocarla se abre el chat con {@code senderId}, y al
      * volver atras se llega a la lista de usuarios en lugar de salir de la app.

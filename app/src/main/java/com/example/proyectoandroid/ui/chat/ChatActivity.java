@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.proyectoandroid.R;
 import com.example.proyectoandroid.data.model.Message;
 import com.example.proyectoandroid.databinding.ActivityChatBinding;
+import com.example.proyectoandroid.fcm.NotificationHelper;
+import com.example.proyectoandroid.util.ActiveChat;
+import com.example.proyectoandroid.util.ImagePicker;
 import com.example.proyectoandroid.util.Resource;
 import com.example.proyectoandroid.util.WindowInsetsHelper;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +31,9 @@ public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
     private ChatViewModel viewModel;
     private MessageAdapter adapter;
+    private String otherUid;
+
+    private final ImagePicker imagePicker = new ImagePicker(this, uri -> viewModel.sendImage(uri));
 
     /** Unica forma de abrir el chat: la usan UsersActivity y el PendingIntent de la notificacion. */
     public static Intent newIntent(Context context, String otherUid, String otherName) {
@@ -48,7 +54,7 @@ public class ChatActivity extends AppCompatActivity {
         binding.toolbar.setNavigationOnClickListener(v -> finish());
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String otherUid = getIntent().getStringExtra(EXTRA_OTHER_UID);
+        otherUid = getIntent().getStringExtra(EXTRA_OTHER_UID);
         String otherName = getIntent().getStringExtra(EXTRA_OTHER_NAME);
         if (user == null || otherUid == null) {
             Toast.makeText(this, R.string.chat_error_no_session, Toast.LENGTH_LONG).show();
@@ -58,13 +64,30 @@ public class ChatActivity extends AppCompatActivity {
 
         String currentName = user.getDisplayName() != null ? user.getDisplayName() : user.getEmail();
         viewModel = new ViewModelProvider(this,
-                new ChatViewModelFactory(user.getUid(), currentName, otherUid)).get(ChatViewModel.class);
+                new ChatViewModelFactory(this, user.getUid(), currentName, otherUid)).get(ChatViewModel.class);
 
         binding.toolbar.setTitle(otherName != null ? otherName : getString(R.string.chat_title));
         setupList(user.getUid());
         observeMessages();
         observeSendState();
+        observeUploadState();
         binding.btnSend.setOnClickListener(v -> sendMessage());
+        binding.btnAttach.setOnClickListener(v -> imagePicker.pick());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (otherUid != null) {
+            ActiveChat.open(otherUid);
+            NotificationHelper.cancel(this, otherUid);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ActiveChat.close();
     }
 
     private void setupList(String currentUid) {
@@ -108,6 +131,24 @@ public class ChatActivity extends AppCompatActivity {
         viewModel.getSendState().observe(this, resource -> {
             if (resource.getStatus() == Resource.Status.ERROR) {
                 Toast.makeText(this, R.string.chat_error_send, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** Mientras se comprime y sube la imagen se bloquea el boton de adjuntar y se muestra una barra de progreso. */
+    private void observeUploadState() {
+        viewModel.getUploadState().observe(this, resource -> {
+            if (resource == null) {
+                return;
+            }
+            boolean uploading = resource.getStatus() == Resource.Status.LOADING;
+            binding.progressUpload.setVisibility(uploading ? View.VISIBLE : View.GONE);
+            binding.btnAttach.setEnabled(!uploading);
+            if (resource.getStatus() == Resource.Status.ERROR) {
+                Toast.makeText(this, resource.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            if (!uploading) {
+                viewModel.onUploadStateHandled();
             }
         });
     }

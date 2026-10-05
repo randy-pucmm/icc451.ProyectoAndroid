@@ -4,10 +4,10 @@
     <string name="chat_title">Chat</string>
     <string name="chat_hint_message">Escribe un mensaje</string>
     <string name="chat_send">Enviar</string>
-    <string name="chat_empty">Aun no hay mensajes. Escribe el primero.</string>
+    <string name="chat_attach">Adjuntar imagen</string>
+    <string name="chat_empty">Aún no hay mensajes. Escribe el primero.</string>
     <string name="chat_error_load">No se pudieron cargar los mensajes</string>
     <string name="chat_error_send">No se pudo enviar el mensaje</string>
-    <string name="chat_error_no_session">Debes iniciar sesion para chatear</string>
+    <string name="chat_error_no_session">Debes iniciar sesión para chatear</string>
     <string name="chat_image_description">Imagen enviada</string>
-    <string name="chat_last_message_image">Imagen</string>
 </resources>

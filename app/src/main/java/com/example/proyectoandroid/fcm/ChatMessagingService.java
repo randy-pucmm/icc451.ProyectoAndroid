@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.proyectoandroid.R;
 import com.example.proyectoandroid.data.repository.UserRepository;
+import com.example.proyectoandroid.util.ActiveChat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -44,6 +45,10 @@ public class ChatMessagingService extends FirebaseMessagingService {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null || senderId.equals(user.getUid())) {
             return; // sin sesion, o es un mensaje propio
+        }
+
+        if (ActiveChat.isOpen(senderId)) {
+            return; // el usuario ya esta viendo esa conversacion
         }
 
         String senderName = data.get(KEY_SENDER_NAME);

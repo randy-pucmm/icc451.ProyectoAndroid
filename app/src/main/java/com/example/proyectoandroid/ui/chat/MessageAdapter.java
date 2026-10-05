@@ -16,6 +16,7 @@ import com.example.proyectoandroid.databinding.ItemMessageOtherBinding;
 import com.example.proyectoandroid.databinding.ItemMessageOwnBinding;
 import com.example.proyectoandroid.util.DateFormatter;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -81,7 +82,7 @@ public class MessageAdapter extends ListAdapter<Message, RecyclerView.ViewHolder
         if (name == null || name.trim().isEmpty()) {
             return "?";
         }
-        return name.trim().substring(0, 1).toUpperCase();
+        return name.trim().substring(0, 1).toUpperCase(Locale.getDefault());
     }
 
     static class OwnTextHolder extends RecyclerView.ViewHolder {

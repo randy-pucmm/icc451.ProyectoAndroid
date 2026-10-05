@@ -22,14 +22,14 @@ import java.io.InputStream;
 public final class ImageCompressor {
 
     /** Lado mayor para imagenes enviadas por el chat. */
-    public static final int CHAT_MAX_DIMENSION = 1280;
+    public static final int CHAT_MAX_DIMENSION = 1024;
     /** Lado mayor para fotos de perfil. */
     public static final int AVATAR_MAX_DIMENSION = 256;
     /**
-     * Tamano maximo del JPEG. En Base64 ocupa un tercio mas (~800 KB), por debajo del limite
+     * Tamano maximo del JPEG. En Base64 ocupa un tercio mas (~530 KB), por debajo del limite
      * de 1 MiB de un documento de Firestore.
      */
-    public static final int MAX_BYTES = 600_000;
+    public static final int MAX_BYTES = 400_000;
 
     private static final int START_QUALITY = 85;
     private static final int MIN_QUALITY = 40;

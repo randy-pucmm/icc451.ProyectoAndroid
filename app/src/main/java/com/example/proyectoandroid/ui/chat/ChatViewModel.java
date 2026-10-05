@@ -1,5 +1,8 @@
 package com.example.proyectoandroid.ui.chat;
 
+import android.net.Uri;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -8,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.proyectoandroid.data.model.Chat;
 import com.example.proyectoandroid.data.model.Message;
 import com.example.proyectoandroid.data.repository.ChatRepository;
+import com.example.proyectoandroid.data.repository.ImageRepository;
 import com.example.proyectoandroid.util.Resource;
 
 import java.util.Arrays;
@@ -17,6 +21,7 @@ import java.util.List;
 public class ChatViewModel extends ViewModel {
 
     private final ChatRepository repository;
+    private final ImageRepository imageRepository;
     private final String chatId;
     private final String currentUid;
     private final String currentName;
@@ -24,9 +29,12 @@ public class ChatViewModel extends ViewModel {
 
     private final LiveData<Resource<List<Message>>> messages;
     private final MediatorLiveData<Resource<Void>> sendState = new MediatorLiveData<>();
+    private final MediatorLiveData<Resource<String>> uploadState = new MediatorLiveData<>();
 
-    public ChatViewModel(ChatRepository repository, String currentUid, String currentName, String otherUid) {
+    public ChatViewModel(ChatRepository repository, ImageRepository imageRepository,
+                         String currentUid, String currentName, String otherUid) {
         this.repository = repository;
+        this.imageRepository = imageRepository;
         this.currentUid = currentUid;
         this.currentName = currentName;
         this.chatId = Chat.buildChatId(currentUid, otherUid);
@@ -40,6 +48,15 @@ public class ChatViewModel extends ViewModel {
 
     public LiveData<Resource<Void>> getSendState() {
         return sendState;
+    }
+
+    /** Progreso de la subida de una imagen; es null cuando el resultado ya fue mostrado. */
+    public LiveData<Resource<String>> getUploadState() {
+        return uploadState;
+    }
+
+    public void onUploadStateHandled() {
+        uploadState.setValue(null);
     }
 
     public String getCurrentUid() {
@@ -79,6 +96,27 @@ public class ChatViewModel extends ViewModel {
         message.setImageUrl(imageUrl.trim());
         send(message);
         return true;
+    }
+
+    /**
+     * Sube la imagen elegida con ImageRepository y, cuando termina bien, la envia como mensaje.
+     * Ignora el toque si ya hay una subida en curso.
+     */
+    public void sendImage(@NonNull Uri uri) {
+        Resource<String> current = uploadState.getValue();
+        if (current != null && current.getStatus() == Resource.Status.LOADING) {
+            return;
+        }
+        LiveData<Resource<String>> source = imageRepository.upload(uri);
+        uploadState.addSource(source, resource -> {
+            uploadState.setValue(resource);
+            if (resource.getStatus() != Resource.Status.LOADING) {
+                uploadState.removeSource(source);
+                if (resource.getStatus() == Resource.Status.SUCCESS) {
+                    sendImageMessage(resource.getData());
+                }
+            }
+        });
     }
 
     private Message buildMessage(String type) {

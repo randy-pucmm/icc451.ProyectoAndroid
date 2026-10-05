@@ -1,8 +1,6 @@
 # Chat Android con Firebase (ICC-451)
 
-Aplicación de chat nativa para Android (Java, XML Views, MVVM) con Firebase: autenticación, mensajería en tiempo real en Firestore, imágenes y notificaciones push.
-
-> Este README cubre la cuenta, los usuarios y los servicios de Firebase (autenticación, imágenes, notificaciones). La parte del chat (mensajes, `ChatActivity`) la documenta su responsable.
+Aplicación de chat nativa para Android (Java, XML Views, MVVM) con Firebase: autenticación, mensajería en tiempo real en Firestore, imágenes y notificaciones push. Tema visual estilo WhatsApp, en claro y oscuro.
 
 ## Requisitos
 
@@ -17,8 +15,8 @@ Aplicación de chat nativa para Android (Java, XML Views, MVVM) con Firebase: au
 2. Registra una app **Android** con el paquete exacto `com.pucmm.proyectochat` (es el `applicationId`; el código Java sigue en `com.example.proyectoandroid`).
 3. Descarga `google-services.json` y colócalo en `app/google-services.json`. El plugin `google-services` se activa solo cuando ese archivo existe; sin él el proyecto compila, pero la app no puede conectarse a Firebase.
 4. **Authentication → Método de acceso:** habilita *Correo electrónico/contraseña*.
-5. **Firestore Database:** crea la base de datos.
-6. Publica las reglas de seguridad de [`firebase/firestore.rules`](firebase/firestore.rules) (pestaña *Reglas* de Firestore). Pruébalas antes con el *Rules Playground*: el bloque de `chats` es un boceto sin verificar.
+5. **Firestore Database:** crea la base de datos en modo producción.
+6. Publica las reglas de [`firebase/firestore.rules`](firebase/firestore.rules) (pestaña *Reglas* de Firestore). Son la única copia: cubren `users`, `chats` y `messages`.
 7. Opcional, solo si el proyecto tiene plan Blaze: crea *Storage* y publica [`firebase/storage.rules`](firebase/storage.rules).
 
 ## Cómo correr la app
@@ -37,44 +35,50 @@ Pruebas unitarias:
 
 `Login` ⇄ `Registro` → `Usuarios` → `Chat`
 
-`MainActivity` no tiene interfaz: al abrir la app lee la sesión que Firebase guardó en el dispositivo y abre `Usuarios` si hay sesión activa, o `Login` si no. La sesión se conserva hasta que el usuario cierra sesión desde el menú de `Usuarios`.
+`MainActivity` no tiene interfaz: al abrir la app lee la sesión que Firebase guardó en el dispositivo y abre `Usuarios` si hay sesión activa, o `Login` si no. La sesión se conserva hasta que el usuario cierra sesión desde el menú de `Usuarios`. Al tocar un usuario se abre su conversación con `ChatActivity.newIntent(...)`, la misma entrada que usa la notificación push.
 
-## Arquitectura (Auth, Usuarios, Imágenes, FCM)
+## Arquitectura
 
 MVVM con `LiveData<Resource<T>>`: las Activities solo pintan, los ViewModels validan y orquestan, y los Repositories son los únicos que hablan con Firebase.
 
 | Capa | Clases |
 |---|---|
-| View | `LoginActivity`, `RegisterActivity`, `UsersActivity`, `UserAdapter` |
-| ViewModel | `AuthViewModel`, `UsersViewModel` |
-| Repository | `AuthRepository`, `UserRepository`, `ImageRepository` |
-| Utilidades | `Validator`, `AuthErrorMapper`, `Presence`, `PresenceTracker`, `ImagePicker`, `ImageCompressor` |
+| View | `LoginActivity`, `RegisterActivity`, `UsersActivity`, `UserAdapter`, `ChatActivity`, `MessageAdapter` |
+| ViewModel | `AuthViewModel`, `UsersViewModel`, `ChatViewModel` (con `ChatViewModelFactory`) |
+| Repository | `AuthRepository`, `UserRepository`, `ChatRepository`, `ImageRepository` |
+| Utilidades | `Validator`, `AuthErrorMapper`, `DateFormatter`, `Presence`, `PresenceTracker`, `ActiveChat`, `ImagePicker`, `ImageCompressor` |
 | Notificaciones | `ChatMessagingService`, `NotificationHelper` |
 
-Documento `users/{uid}`: `uid`, `displayName`, `email`, `fcmToken`, `createdAt`, y los opcionales `photoUrl`, `online`, `lastSeen`.
+### Datos en Firestore
+
+| Ruta | Campos |
+|---|---|
+| `users/{uid}` | `uid`, `displayName`, `email`, `fcmToken`, `createdAt`, y los opcionales `photoUrl`, `online`, `lastSeen` |
+| `chats/{chatId}` | `participants[]`, `lastMessage`, `lastMessageAt` |
+| `chats/{chatId}/messages/{id}` | `senderId`, `senderName`, `text`, `type` (`TEXT` o `IMAGE`), `imageUrl`, `timestamp` |
+
+`chatId` = los dos uid ordenados y unidos con `_` (`Chat.buildChatId`). Enviar un mensaje escribe el mensaje y actualiza el documento del chat en un solo `WriteBatch`, y el historial se escucha con un `SnapshotListener` ordenado por `timestamp`.
 
 ## Imágenes: Storage o Base64
 
 `ImageRepository.upload(Uri)` devuelve un `LiveData<Resource<String>>` con lo que se guarda en Firestore (`imageUrl` / `photoUrl`). El backend se elige con la constante `ImageRepository.BACKEND`:
 
-- `BASE64` (por defecto): la imagen se reduce a un JPEG de hasta ~600 KB y se guarda como `data:image/jpeg;base64,...` dentro del documento (el límite de Firestore es 1 MiB por documento). Funciona sin plan Blaze.
+- `BASE64` (por defecto): la imagen se reduce a un JPEG de hasta ~400 KB y se guarda como `data:image/jpeg;base64,...` dentro del documento (el límite de Firestore es 1 MiB por documento). Funciona sin plan Blaze.
 - `STORAGE`: sube el archivo a Firebase Storage y devuelve la URL de descarga. Storage exige el plan Blaze; para probarlo sin pagar, activa `USE_STORAGE_EMULATOR` y arranca el *Storage Emulator* (`10.0.2.2:9199`, solo desde el emulador de Android).
 
-Quien consume la cadena (por ejemplo `Glide.with(view).load(cadena)`) no distingue entre los dos casos.
+Quien consume la cadena no distingue entre los dos casos: `Glide.with(view).load(cadena)` carga tanto una URL como un `data:` URI.
 
-Para adjuntar una imagen desde el chat, `ImagePicker` abre el selector del sistema:
-
-```java
-private final ImagePicker imagePicker = new ImagePicker(this, uri -> viewModel.sendImage(uri));
-// ...
-binding.buttonAttach.setOnClickListener(v -> imagePicker.pick());
-```
+En el chat, el botón de clip abre `ImagePicker` (selector del sistema, sin permisos de almacenamiento); `ChatViewModel.sendImage(uri)` sube la imagen y, al terminar, la envía como mensaje de tipo `IMAGE`. En `UsersActivity`, tocar la cabecera cambia la foto de perfil con el mismo mecanismo.
 
 ## Notificaciones push
 
 La app guarda su token FCM en `users/{uid}.fcmToken` al abrir la lista de usuarios y lo borra al cerrar sesión. Como desplegar Cloud Functions exige el plan Blaze, el envío lo hace un script de Node que corre en una laptop durante la demo: ver [`tools/notifier`](tools/notifier/README.md).
 
-En Android 13 o superior la app pide el permiso de notificaciones al abrir `Usuarios`.
+En Android 13 o superior la app pide el permiso de notificaciones al abrir `Usuarios`. Si llega un aviso de la persona cuyo chat ya está abierto no se muestra, y al abrir un chat se quita su notificación pendiente.
+
+## Tema y colores
+
+Paleta estilo WhatsApp definida solo con nombres semánticos en `res/values/colors.xml` (claro) y `res/values-night/colors.xml` (oscuro); el tema `Theme.ProyectoAndroid` y los layouts los usan, sin colores fijos. Para cambiar la paleta basta con editar esos dos archivos. En modo oscuro el chat usa el wallpaper garabateado; en claro, un fondo beige liso.
 
 ## Seguridad
 
